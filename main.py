@@ -1,23 +1,54 @@
-import streamlit as st
+
+import dash
+from dash import html, dcc
+import plotly.express as px
 import pandas as pd
-from data_processing import prepare_data
-from keras.models import load_model
-import numpy as np
+from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
 
-# Charger et préparer les données
-data = prepare_data('Base_OP_2023_Nationale.csv')
-model = load_model('loyer_model.h5')  # Assurez-vous que le modèle est bien entraîné et sauvegardé.
+# Load the dataset that has been downloaded using 'get_data.py'
+data_path = 'LoyersMoyen2023.xlsx'  # Make sure this path is where 'get_data.py' saves the file
+data = pd.read_excel(data_path)
 
-# Création de l'interface utilisateur
-st.title('Dashboard des Loyers en France avec Prédiction de Loyer')
+# Create a Dash application
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-# Visualisation des données
-st.header('Histogramme des Loyers')
-st.bar_chart(data['loyer'])
+app.layout = dbc.Container([
+    dbc.Row([
+        dbc.Col([
+            dcc.Dropdown(
+                id='type-dropdown',
+                options=[{'label': i, 'value': i} for i in data['type'].unique()],
+                value='ensemble',
+                clearable=False
+            ),
+            dcc.Graph(id='loyer-histogram')
+        ], width=6),
+        dbc.Col([
+            dcc.Graph(id='geo-map')
+        ], width=6)
+    ])
+])
 
-st.header('Prédiction de Loyer')
-surface = st.number_input('Entrez la surface du bien (en m²):', min_value=0)
+@app.callback(
+    Output('loyer-histogram', 'figure'),
+    Input('type-dropdown', 'value')
+)
+def update_histogram(selected_type):
+    filtered_data = data[data['type'] == selected_type]
+    fig = px.histogram(filtered_data, x='Loyer', nbins=30, title="Distribution des Loyers")
+    return fig
 
-if st.button('Prédire le loyer'):
-    predicted_loyer = model.predict(np.array([[surface]]))[0][0]
-    st.write(f'Le loyer prédit est de {predicted_loyer:.2f} euros.')
+@app.callback(
+    Output('geo-map', 'figure'),
+    Input('type-dropdown', 'value')
+)
+def update_map(selected_type):
+    filtered_data = data[data['type'] == selected_type]
+    # Dummy lat and lon for the example; replace with real data if available
+    fig = px.scatter_geo(filtered_data, lat=pd.Series([48.8566]*len(filtered_data)), lon=pd.Series([2.3522]*len(filtered_data)),
+                         title="Carte des Loyers")
+    return fig
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
