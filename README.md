@@ -1,51 +1,64 @@
-PROJET PREDICTION DE LOYERS
 
+# Tableau de bord pour l'analyse des données de location de logements
 
-Objectif du projet :
+Ce README fournit des informations détaillées sur le déploiement et l'utilisation du tableau de bord, les perspectives tirées de l'analyse des données, et un guide pour les développeurs intéressés par la compréhension, la modification ou l'extension du code.
 
-Prédire le prix des loyers en fonction de la surface, du nombre de pièce et de l'agglomération.
-Dans notre dataset ces informations sont recoupées par groupement d'habitations.
-Nous travaillerons donc avec des moyennes.
-Par exemple sur un immeuble ou un quartier on aura le loyer moyen, la surface moyenne et le nombre de pièce moyen.
+## Guide de l'utilisateur
 
+### Déploiement
 
+1. **Prérequis** : Assurez-vous que Python est installé sur votre machine ainsi que les bibliothèques suivantes :
+   - `dash`
+   - `plotly`
+   - `pandas`
+   - `dash_bootstrap_components`
+   Installez-les via pip si ce n'est pas déjà fait :
+   ```bash
+   pip install dash plotly pandas dash-bootstrap-components
+   ```
 
-Étapes pour lancer le projet :
+2. **Téléchargement des données** :
+   Exécutez le script `get_data.py` pour télécharger les données nécessaires :
+   ```bash
+   python get_data.py
+   ```
 
+3. **Démarrage du tableau de bord** :
+   Naviguez vers le répertoire contenant `main.py` et exécutez :
+   ```bash
+   python main.py
+   ```
+   Accédez au tableau de bord via votre navigateur web à l'adresse `http://127.0.0.1:8050`.
 
-1 - Installer Python et les Dépendances :
+### Utilisation
 
-Python doit être installé. Vous pouvez télécharger Python depuis python.org.
-Installez les dépendances nécessaires en exécutant le fichier requirements.txt.
-Ouvrez un terminal ou une invite de commande et naviguez jusqu'au dossier contenant les fichiers du projet.
-Exécutez la commande suivante :
+- **Interaction avec le tableau de bord** :
+  Utilisez les menus déroulants pour sélectionner différentes catégories de données et observez comment les visualisations se mettent à jour en conséquence.
+  - **Histogramme** : Montre la distribution des prix des locations.
+  - **Carte de géolocalisation** : Affiche les emplacements sur une carte en fonction des données de location.
 
-pip install -r requirements.txt
+## Rapport d'analyse
 
+L'analyse des données sur les locations de logements a fourni les perspectives suivantes :
+- Les prix moyens de location varient considérablement selon les zones.
+- Les prix de location sont plus élevés dans les centres urbains par rapport aux zones rurales.
+- Les logements plus grands commandent des prix de location plus élevés, comme en témoignent les données.
 
-2 - Lancer l'Application Streamlit :
+## Guide du développeur
 
-Dans le même terminal, lancez l'application en utilisant Streamlit avec la commande :
+### Architecture
 
-streamlit run main.py
+- **main.py** : Contient toute la logique du serveur et les callbacks nécessaires pour exécuter l'application Dash.
+- **get_data.py** : Script utilisé pour télécharger le jeu de données utilisé par l'application.
 
-Streamlit devrait automatiquement ouvrir l'application dans ton navigateur par défaut.
-Si ce n'est pas le cas, il affichera une URL que vous pourrez copier et coller dans votre navigateur pour accéder à l'application.
+### Extension du code
 
+Pour étendre le tableau de bord :
+- Ajoutez des callbacks et des graphiques supplémentaires dans `main.py`.
+- Modifiez `get_data.py` pour télécharger des jeux de données supplémentaires si nécessaire.
 
-3 - Interagir avec l'Application :
+### Modification du code
 
-Utilise les widgets sur l'interface pour interagir avec les données, voir les graphiques, et faire des prédictions de loyers en fonction des entrées que vous fournirez.
+- Pour changer la source de données ou ajouter de nouveaux composants visuels, mettez à jour le `data_path` dans `main.py` et ajustez les fonctions de callback en conséquence.
 
-
-4 - Vérifier le Modèle de Deep Learning :
-
-Si vous voulez tester le modèle de deep learning, assurez-vous que le fichier de données et le modèle entraîné (loyer_model.h5) sont correctement configurés et accessibles par le script deeplearning.py. Vous pouvez exécuter ce script séparément pour voir les prédictions de loyer basées sur les données d'entrée.
-
-
-5 - Visualiser et Analyser les Résultats :
-
-Histogrammes et Graphiques : Observez les distributions et autres visualisations générées par l'application.
-Prédictions de Loyer : Testez le modèle de prédiction en entrant différentes valeurs de surface pour voir comment le loyer prédit varie.
-
-
+N'hésitez pas à fork ce projet et à apporter vos propres modifications comme bon vous semble.
